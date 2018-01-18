@@ -27,10 +27,6 @@ public class MainActivity extends AppCompatActivity {
         SectionsPagerAdapter mSectionsPagerAdapter =
                 new SectionsPagerAdapter(getSupportFragmentManager());
 
-    // Set up the ViewPager with the sections adapter.
-    /*
-        The {@link ViewPager} that will host the section contents.
-    */
         ViewPager mViewPager = findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
     }
