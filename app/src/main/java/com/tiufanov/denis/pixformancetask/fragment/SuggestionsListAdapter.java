@@ -1,33 +1,40 @@
 package com.tiufanov.denis.pixformancetask.fragment;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
-import android.support.constraint.ConstraintLayout;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import java.util.LinkedList;
+import java.util.Set;
 
 public class SuggestionsListAdapter extends BaseAdapter {
     private static final int TEXT_SIZE = 25;
-    public static final int MIN_HEIGHT_PX = 50;
-    private final LimitedList suggestionsList;
+    private static final int MIN_HEIGHT_PX = 40;
+    private static String SHAREDPREFS_KEY = "SuggestionsList";
+    private static String SUGGESTIONS_KEY = "suggestions";
+    @NonNull
+    private final Context context;
+    @NonNull
+    private final LimitedList suggestionsList= new LimitedList();
 
-    SuggestionsListAdapter() {
-        suggestionsList= new LimitedList();
-        suggestionsList.addFirst("January");
-        suggestionsList.addFirst("February");
-        suggestionsList.addFirst("March");
-        suggestionsList.addFirst("April");
-        suggestionsList.addFirst("May");
-        suggestionsList.addFirst("June");
-        suggestionsList.addFirst("July");
-        suggestionsList.addFirst("August");
-        suggestionsList.addFirst("September");
-        suggestionsList.addFirst("October");
-        suggestionsList.addFirst("November");
-        suggestionsList.addFirst("December");
+    SuggestionsListAdapter(@NonNull final Context context) {
+        this.context = context;
+//        suggestionsList.addFirst("January");
+//        suggestionsList.addFirst("February");
+//        suggestionsList.addFirst("March");
+//        suggestionsList.addFirst("April");
+//        suggestionsList.addFirst("May");
+//        suggestionsList.addFirst("June");
+//        suggestionsList.addFirst("July");
+//        suggestionsList.addFirst("August");
+//        suggestionsList.addFirst("September");
+//        suggestionsList.addFirst("October");
+//        suggestionsList.addFirst("November");
+//        suggestionsList.addFirst("December");
     }
 
     @Override
@@ -47,20 +54,31 @@ public class SuggestionsListAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, @NonNull View convertView, @NonNull ViewGroup parent) {
-        ConstraintLayout.LayoutParams params = new ConstraintLayout.LayoutParams(
-                ConstraintLayout.LayoutParams.MATCH_PARENT, ConstraintLayout.LayoutParams.MATCH_PARENT);
         TextView suggestionTextView = new TextView(parent.getContext());
         suggestionTextView.setTextSize(TEXT_SIZE);
-        params.verticalBias = 1;
-        suggestionTextView.setLayoutParams(params);
         suggestionTextView.setMinHeight(MIN_HEIGHT_PX);
         suggestionTextView.setText(suggestionsList.get(position));
+        suggestionTextView.setPadding(10, 0, 0,0);
         return suggestionTextView;
     }
 
-    public void moveSuggestionToFirstPosition(int position) {
-        String movedString = suggestionsList.remove(position);
-        suggestionsList.add(movedString);
+    void moveSuggestionToTopPosition(@NonNull String filmName) {
+        suggestionsList.remove(filmName);
+        suggestionsList.addFirst(filmName);
+    }
+
+    void onResume() {
+        SharedPreferences preferences = context.getSharedPreferences(SHAREDPREFS_KEY, Context.MODE_PRIVATE);
+        Set<String> suggestionsSet = new android.support.v4.util.ArraySet<>();
+        suggestionsSet.addAll(suggestionsList);
+        preferences.edit().putStringSet(SUGGESTIONS_KEY, suggestionsSet).apply();
+    }
+
+    void onPause() {
+        SharedPreferences preferences = context.getSharedPreferences(SHAREDPREFS_KEY, Context.MODE_PRIVATE);
+        Set<String> suggestionsSet = preferences.getStringSet(SUGGESTIONS_KEY,
+                new android.support.v4.util.ArraySet<String>());
+        suggestionsList.addAll(suggestionsSet);
     }
 
     private class LimitedList extends LinkedList<String> {

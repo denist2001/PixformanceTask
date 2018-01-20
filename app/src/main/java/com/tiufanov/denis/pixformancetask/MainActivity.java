@@ -1,25 +1,23 @@
 package com.tiufanov.denis.pixformancetask;
 
+import android.databinding.DataBindingUtil;
 import android.support.v7.app.AppCompatActivity;
 
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
+import android.view.ViewGroup;
 
+import com.tiufanov.denis.pixformancetask.databinding.ActivityMainBinding;
 import com.tiufanov.denis.pixformancetask.fragment.SectionsPagerAdapter;
 
 public class MainActivity extends AppCompatActivity {
 
+    private ActivityMainBinding activityMainBinder;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-//        ActivityMainBinding activityMainBinder = DataBindingUtil.setContentView(this, R.layout.activity_main);
-
-        // Create the adapter that will return a fragment for each of the two
-        // primary sections of the activity.
-
-    // Create the adapter that will return a fragment for each of the two
-    // primary sections of the activity.
+        activityMainBinder = DataBindingUtil.setContentView(this, R.layout.activity_main);
     /*
         The {@link android.support.v4.view.PagerAdapter} that will provide
         fragments for each of the sections. We use a
@@ -28,15 +26,21 @@ public class MainActivity extends AppCompatActivity {
         may be best to switch to a
         {@link android.support.v4.app.FragmentStatePagerAdapter}.
     */
+        // Set up the ViewPager with the sections adapter.
         SectionsPagerAdapter mSectionsPagerAdapter =
                 new SectionsPagerAdapter(getSupportFragmentManager());
-        // Set up the ViewPager with the sections adapter.
-    /*
-        The {@link ViewPager} that will host the section contents.
-    */
-        ViewPager viewPager = findViewById(R.id.container);
-        viewPager.setAdapter(mSectionsPagerAdapter);
-//        activityMainBinder.container.setAdapter(mSectionsPagerAdapter);
+        activityMainBinder.container.setAdapter(mSectionsPagerAdapter);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (activityMainBinder.container != null) {
+            ViewGroup parent = (ViewGroup) activityMainBinder.container.getParent();
+            if (parent != null) {
+                parent.removeAllViews();
+            }
+        }
     }
 
     /*public void replaceFragmentWithAnimation(Fragment fragment, Direction swipeDirection){
