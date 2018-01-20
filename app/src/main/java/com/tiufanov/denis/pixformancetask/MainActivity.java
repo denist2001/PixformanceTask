@@ -32,17 +32,6 @@ public class MainActivity extends AppCompatActivity {
         activityMainBinder.container.setAdapter(mSectionsPagerAdapter);
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        if (activityMainBinder.container != null) {
-            ViewGroup parent = (ViewGroup) activityMainBinder.container.getParent();
-            if (parent != null) {
-                parent.removeAllViews();
-            }
-        }
-    }
-
     /*public void replaceFragmentWithAnimation(Fragment fragment, Direction swipeDirection){
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.setCustomAnimations(R.anim.enter_from_left,

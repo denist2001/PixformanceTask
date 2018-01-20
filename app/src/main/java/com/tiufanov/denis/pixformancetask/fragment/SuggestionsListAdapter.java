@@ -69,16 +69,16 @@ public class SuggestionsListAdapter extends BaseAdapter {
 
     void onResume() {
         SharedPreferences preferences = context.getSharedPreferences(SHAREDPREFS_KEY, Context.MODE_PRIVATE);
-        Set<String> suggestionsSet = new android.support.v4.util.ArraySet<>();
-        suggestionsSet.addAll(suggestionsList);
-        preferences.edit().putStringSet(SUGGESTIONS_KEY, suggestionsSet).apply();
+        Set<String> suggestionsSet = preferences.getStringSet(SUGGESTIONS_KEY,
+                new android.support.v4.util.ArraySet<String>());
+        suggestionsList.addAll(suggestionsSet);
     }
 
     void onPause() {
         SharedPreferences preferences = context.getSharedPreferences(SHAREDPREFS_KEY, Context.MODE_PRIVATE);
-        Set<String> suggestionsSet = preferences.getStringSet(SUGGESTIONS_KEY,
-                new android.support.v4.util.ArraySet<String>());
-        suggestionsList.addAll(suggestionsSet);
+        Set<String> suggestionsSet = new android.support.v4.util.ArraySet<>();
+        suggestionsSet.addAll(suggestionsList);
+        preferences.edit().putStringSet(SUGGESTIONS_KEY, suggestionsSet).apply();
     }
 
     private class LimitedList extends LinkedList<String> {

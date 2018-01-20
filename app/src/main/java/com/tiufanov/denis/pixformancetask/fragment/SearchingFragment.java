@@ -27,7 +27,7 @@ public class SearchingFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         suggestionsListAdapter = new SuggestionsListAdapter(getActivity().getApplicationContext());
         fragment = DataBindingUtil.inflate(inflater,
-                R.layout.fragment_main, container, true);
+                R.layout.fragment_main, container, false);
         fragment.successfulSuggestions.setAdapter(suggestionsListAdapter);
         fragment.searchView.setOnSearchClickListener(new View.OnClickListener() {
             @Override
@@ -62,13 +62,13 @@ public class SearchingFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-//        suggestionsListAdapter.onResume();
+        suggestionsListAdapter.onResume();
     }
 
     @Override
     public void onPause() {
         super.onPause();
-//        suggestionsListAdapter.onPause();
+        suggestionsListAdapter.onPause();
     }
 
     @Override
