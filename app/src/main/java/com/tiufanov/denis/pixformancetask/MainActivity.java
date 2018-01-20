@@ -13,6 +13,10 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+//        ActivityMainBinding activityMainBinder = DataBindingUtil.setContentView(this, R.layout.activity_main);
+
+        // Create the adapter that will return a fragment for each of the two
+        // primary sections of the activity.
 
     // Create the adapter that will return a fragment for each of the two
     // primary sections of the activity.
@@ -26,8 +30,31 @@ public class MainActivity extends AppCompatActivity {
     */
         SectionsPagerAdapter mSectionsPagerAdapter =
                 new SectionsPagerAdapter(getSupportFragmentManager());
-
-        ViewPager mViewPager = findViewById(R.id.container);
-        mViewPager.setAdapter(mSectionsPagerAdapter);
+        // Set up the ViewPager with the sections adapter.
+    /*
+        The {@link ViewPager} that will host the section contents.
+    */
+        ViewPager viewPager = findViewById(R.id.container);
+        viewPager.setAdapter(mSectionsPagerAdapter);
+//        activityMainBinder.container.setAdapter(mSectionsPagerAdapter);
     }
+
+    /*public void replaceFragmentWithAnimation(Fragment fragment, Direction swipeDirection){
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.setCustomAnimations(R.anim.enter_from_left,
+                R.anim.exit_to_right,
+                R.anim.enter_from_right,
+                R.anim.exit_to_left);
+        transaction.replace(R.id.container, fragment);
+//        transaction.addToBackStack(tag);
+        transaction.commit();
+    }
+
+    private class SwipeFragmentNeeded implements SwipeFragment {
+
+        @Override
+        public void onSwipeFragmentNeeded(Fragment fragment, Direction swipeDirection) {
+            replaceFragmentWithAnimation(fragment, swipeDirection);
+        }
+    }*/
 }
