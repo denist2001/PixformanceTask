@@ -5,14 +5,13 @@ import android.support.constraint.ConstraintLayout;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
-import java.util.List;
 
 public class SuggestionsListAdapter extends BaseAdapter {
+    private static final int TEXT_SIZE = 25;
+    public static final int MIN_HEIGHT_PX = 50;
     private final LimitedList suggestionsList;
 
     SuggestionsListAdapter() {
@@ -51,10 +50,10 @@ public class SuggestionsListAdapter extends BaseAdapter {
         ConstraintLayout.LayoutParams params = new ConstraintLayout.LayoutParams(
                 ConstraintLayout.LayoutParams.MATCH_PARENT, ConstraintLayout.LayoutParams.MATCH_PARENT);
         TextView suggestionTextView = new TextView(parent.getContext());
-        suggestionTextView.setTextSize(25);
+        suggestionTextView.setTextSize(TEXT_SIZE);
         params.verticalBias = 1;
         suggestionTextView.setLayoutParams(params);
-        suggestionTextView.setMinHeight(50);
+        suggestionTextView.setMinHeight(MIN_HEIGHT_PX);
         suggestionTextView.setText(suggestionsList.get(position));
         return suggestionTextView;
     }
@@ -65,21 +64,24 @@ public class SuggestionsListAdapter extends BaseAdapter {
     }
 
     private class LimitedList extends LinkedList<String> {
+        private final int quantitySavedSuggestions = 10;
 
         @Override
         public boolean add(@NonNull String s) {
             super.add(s);
-            if (getCount() > 10) {
-                removeRange(10, getCount());
-            }
+            removeOldSuggestions();
             return true;
         }
 
         @Override
         public void addFirst(@NonNull String s) {
             super.addFirst(s);
-            if (getCount() > 10) {
-                removeRange(10, getCount());
+            removeOldSuggestions();
+        }
+
+        private void removeOldSuggestions() {
+            if (getCount() > quantitySavedSuggestions) {
+                removeRange(quantitySavedSuggestions, getCount());
             }
         }
     }

@@ -31,8 +31,6 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
             default:
                 return SearchingFragment.newInstance(0);
         }
-        // Return a PlaceholderFragment (defined as a static inner class below).
-        return PlaceholderFragment.newInstance(position + 1);
     }
 
     @Override
