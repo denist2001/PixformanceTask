@@ -4,7 +4,6 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-
 import com.tiufanov.denis.pixformancetask.Direction;
 import com.tiufanov.denis.pixformancetask.SwipeFragment;
 
@@ -18,7 +17,6 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
     public SectionsPagerAdapter(@NonNull FragmentManager fm/*, SwipeFragment swipeFragment*/) {
         super(fm);
-//        this.swipeFragment = swipeFragment;
     }
 
     @Override
@@ -33,6 +31,8 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
             default:
                 return SearchingFragment.newInstance(0);
         }
+        // Return a PlaceholderFragment (defined as a static inner class below).
+        return PlaceholderFragment.newInstance(position + 1);
     }
 
     @Override
