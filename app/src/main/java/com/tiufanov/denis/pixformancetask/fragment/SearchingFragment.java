@@ -1,6 +1,6 @@
 package com.tiufanov.denis.pixformancetask.fragment;
 
-import android.app.Activity;
+import android.app.AlertDialog;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.os.Handler;
@@ -103,6 +103,13 @@ public class SearchingFragment extends Fragment implements OnFilmLoaded{
         new Handler(Looper.getMainLooper()).post(new Runnable() {
             @Override
             public void run() {
+                if (suggestions.isEmpty()) {
+                    AlertDialog.Builder alertDialog =
+                            new AlertDialog.Builder(fragment.getRoot().getContext());
+                    alertDialog.setMessage("Ooops... Nothing were found. Try to find more common films.");
+                    alertDialog.create().show();
+                    return;
+                }
                 suggestionsListAdapter.moveSuggestionToTopPosition(filmName);
                 suggestionsListAdapter.notifyDataSetChanged();
                 fragment.suggestionsRecyclerView.setVisibility(View.VISIBLE);
