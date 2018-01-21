@@ -23,18 +23,6 @@ public class SuggestionsListAdapter extends BaseAdapter {
 
     SuggestionsListAdapter(@NonNull final Context context) {
         this.context = context;
-//        suggestionsList.addFirst("January");
-//        suggestionsList.addFirst("February");
-//        suggestionsList.addFirst("March");
-//        suggestionsList.addFirst("April");
-//        suggestionsList.addFirst("May");
-//        suggestionsList.addFirst("June");
-//        suggestionsList.addFirst("July");
-//        suggestionsList.addFirst("August");
-//        suggestionsList.addFirst("September");
-//        suggestionsList.addFirst("October");
-//        suggestionsList.addFirst("November");
-//        suggestionsList.addFirst("December");
     }
 
     @Override

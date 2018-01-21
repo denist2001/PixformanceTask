@@ -1,26 +1,39 @@
 package com.tiufanov.denis.pixformancetask.fragment;
 
+import android.app.Activity;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.SearchView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 
+import com.tiufanov.denis.pixformancetask.FilmsRepository;
+import com.tiufanov.denis.pixformancetask.OnFilmLoaded;
 import com.tiufanov.denis.pixformancetask.R;
+import com.tiufanov.denis.pixformancetask.SuggestionObject;
+import com.tiufanov.denis.pixformancetask.SuggestionsRecyclerAdapter;
 import com.tiufanov.denis.pixformancetask.databinding.FragmentMainBinding;
+
+import java.util.ArrayList;
 
 /**
  * A placeholder fragment containing searching list and shows query results.
  */
-public class SearchingFragment extends Fragment {
+public class SearchingFragment extends Fragment implements OnFilmLoaded{
 
     private SuggestionsListAdapter suggestionsListAdapter;
     private FragmentMainBinding fragment;
+    private FilmsRepository repository = new FilmsRepository();
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -32,6 +45,7 @@ public class SearchingFragment extends Fragment {
         fragment.searchView.setOnSearchClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                fragment.successfulSuggestions.bringToFront();
                 fragment.successfulSuggestions.setVisibility(View.VISIBLE);
             }
         });
@@ -82,9 +96,35 @@ public class SearchingFragment extends Fragment {
         }
     }
 
-    private void searchFilm (@NonNull final String filmName) {
-        //TODO: Sending request to server
-        suggestionsListAdapter.moveSuggestionToTopPosition(filmName);
-        suggestionsListAdapter.notifyDataSetChanged();
+    @Override
+    public void onSearchResultsLoaded(@NonNull final String filmName,
+                                      @NonNull final ArrayList<SuggestionObject> suggestions) {
+        Log.d("Valid answer", suggestions.toString());
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+            @Override
+            public void run() {
+                suggestionsListAdapter.moveSuggestionToTopPosition(filmName);
+                suggestionsListAdapter.notifyDataSetChanged();
+                fragment.suggestionsRecyclerView.setVisibility(View.VISIBLE);
+                DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(
+                        fragment.suggestionsRecyclerView.getContext(),DividerItemDecoration.VERTICAL);
+                fragment.suggestionsRecyclerView.addItemDecoration(dividerItemDecoration);
+                fragment.suggestionsRecyclerView.setLayoutManager(
+                        new LinearLayoutManager(fragment.getRoot().getContext()));
+                fragment.suggestionsRecyclerView.setAdapter(
+                        new SuggestionsRecyclerAdapter(fragment.getRoot().getContext(), suggestions));
+            }
+        });
+
     }
+
+    @Override
+    public void onSearchResultsError(@NonNull final String filmName, @NonNull final String error) {
+        Log.d("Fail answer", error);
+    }
+
+    private void searchFilm (@NonNull final String filmName) {
+        repository.requestFilm(filmName, this);
+    }
+
 }

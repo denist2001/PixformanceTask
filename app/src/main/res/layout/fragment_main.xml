@@ -40,5 +40,17 @@
             app:layout_constraintLeft_toRightOf="@+id/search_view"
             app:layout_constraintTop_toBottomOf="@+id/search_view" />
 
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/suggestionsRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/one_material_design_point"
+            android:visibility="invisible"
+            android:background="@android:drawable/editbox_dropdown_light_frame"
+            android:elevation="@dimen/one_material_design_point"
+            app:layout_constraintLeft_toLeftOf="@+id/search_view"
+            app:layout_constraintLeft_toRightOf="@+id/search_view"
+            app:layout_constraintTop_toBottomOf="@+id/search_view" />
+
     </android.support.constraint.ConstraintLayout>
 </layout>
