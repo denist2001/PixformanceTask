@@ -9,12 +9,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.tiufanov.denis.pixformancetask.OnFullInfoShow;
 import com.tiufanov.denis.pixformancetask.R;
 
 /**
  * A placeholder fragment containing a suggestion view.
  */
 public class SuggestionFragment extends Fragment {
+
+    private OnFullInfoShow onFullInfoShow;
 
     /**
      * The fragment argument representing the details about selected film.
@@ -37,5 +40,9 @@ public class SuggestionFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_main, container, false);
+    }
+
+    public void setOnFullInfoShow (@NonNull final OnFullInfoShow onFullInfoShow) {
+        this.onFullInfoShow = onFullInfoShow;
     }
 }

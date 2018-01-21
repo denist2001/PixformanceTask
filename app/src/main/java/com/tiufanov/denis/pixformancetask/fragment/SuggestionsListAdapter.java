@@ -1,34 +1,28 @@
 package com.tiufanov.denis.pixformancetask.fragment;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
-import android.support.constraint.ConstraintLayout;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
-import java.util.List;
+import java.util.Set;
 
 public class SuggestionsListAdapter extends BaseAdapter {
-    private final LimitedList suggestionsList;
+    private static final int TEXT_SIZE = 25;
+    private static final int MIN_HEIGHT_PX = 40;
+    private static String SHAREDPREFS_KEY = "SuggestionsList";
+    private static String SUGGESTIONS_KEY = "suggestions";
+    @NonNull
+    private final Context context;
+    @NonNull
+    private final LimitedList suggestionsList= new LimitedList();
 
-    SuggestionsListAdapter() {
-        suggestionsList= new LimitedList();
-        suggestionsList.addFirst("January");
-        suggestionsList.addFirst("February");
-        suggestionsList.addFirst("March");
-        suggestionsList.addFirst("April");
-        suggestionsList.addFirst("May");
-        suggestionsList.addFirst("June");
-        suggestionsList.addFirst("July");
-        suggestionsList.addFirst("August");
-        suggestionsList.addFirst("September");
-        suggestionsList.addFirst("October");
-        suggestionsList.addFirst("November");
-        suggestionsList.addFirst("December");
+    SuggestionsListAdapter(@NonNull final Context context) {
+        this.context = context;
     }
 
     @Override
@@ -48,38 +42,52 @@ public class SuggestionsListAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, @NonNull View convertView, @NonNull ViewGroup parent) {
-        ConstraintLayout.LayoutParams params = new ConstraintLayout.LayoutParams(
-                ConstraintLayout.LayoutParams.MATCH_PARENT, ConstraintLayout.LayoutParams.MATCH_PARENT);
         TextView suggestionTextView = new TextView(parent.getContext());
-        suggestionTextView.setTextSize(25);
-        params.verticalBias = 1;
-        suggestionTextView.setLayoutParams(params);
-        suggestionTextView.setMinHeight(50);
+        suggestionTextView.setTextSize(TEXT_SIZE);
+        suggestionTextView.setMinHeight(MIN_HEIGHT_PX);
         suggestionTextView.setText(suggestionsList.get(position));
+        suggestionTextView.setPadding(10, 0, 0,0);
         return suggestionTextView;
     }
 
-    public void moveSuggestionToFirstPosition(int position) {
-        String movedString = suggestionsList.remove(position);
-        suggestionsList.add(movedString);
+    void moveSuggestionToTopPosition(@NonNull String filmName) {
+        suggestionsList.remove(filmName);
+        suggestionsList.addFirst(filmName);
+    }
+
+    void onResume() {
+        SharedPreferences preferences = context.getSharedPreferences(SHAREDPREFS_KEY, Context.MODE_PRIVATE);
+        Set<String> suggestionsSet = preferences.getStringSet(SUGGESTIONS_KEY,
+                new android.support.v4.util.ArraySet<String>());
+        suggestionsList.addAll(suggestionsSet);
+    }
+
+    void onPause() {
+        SharedPreferences preferences = context.getSharedPreferences(SHAREDPREFS_KEY, Context.MODE_PRIVATE);
+        Set<String> suggestionsSet = new android.support.v4.util.ArraySet<>();
+        suggestionsSet.addAll(suggestionsList);
+        preferences.edit().putStringSet(SUGGESTIONS_KEY, suggestionsSet).apply();
     }
 
     private class LimitedList extends LinkedList<String> {
+        private final int quantitySavedSuggestions = 10;
 
         @Override
         public boolean add(@NonNull String s) {
             super.add(s);
-            if (getCount() > 10) {
-                removeRange(10, getCount());
-            }
+            removeOldSuggestions();
             return true;
         }
 
         @Override
         public void addFirst(@NonNull String s) {
             super.addFirst(s);
-            if (getCount() > 10) {
-                removeRange(10, getCount());
+            removeOldSuggestions();
+        }
+
+        private void removeOldSuggestions() {
+            if (getCount() > quantitySavedSuggestions) {
+                removeRange(quantitySavedSuggestions, getCount());
             }
         }
     }
