@@ -31,12 +31,12 @@ public class SuggestionsListAdapter extends BaseAdapter {
     }
 
     @Override
-    public String getItem(int position) {
+    public String getItem(final int position) {
         return suggestionsList.get(position);
     }
 
     @Override
-    public long getItemId(int position) {
+    public long getItemId(final int position) {
         return position;
     }
 

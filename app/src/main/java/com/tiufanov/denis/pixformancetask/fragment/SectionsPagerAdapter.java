@@ -8,9 +8,8 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.view.ViewGroup;
 
 import com.tiufanov.denis.pixformancetask.Direction;
-import com.tiufanov.denis.pixformancetask.MoveToFilmDetails;
-import com.tiufanov.denis.pixformancetask.MoveToSearch;
-import com.tiufanov.denis.pixformancetask.OnSwipeDirection;
+import com.tiufanov.denis.pixformancetask.MoveToFilmDetailsListener;
+import com.tiufanov.denis.pixformancetask.SwipeDirectionListener;
 import com.tiufanov.denis.pixformancetask.SuggestionObject;
 
 
@@ -22,12 +21,12 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
     private static final String SUGGESTION_KEY = "Suggestion";
     private SuggestionObject suggestionObject;
     @NonNull
-    private OnSwipeDirection onSwipeDirection;
+    private SwipeDirectionListener swipeDirectionListener;
 
     public SectionsPagerAdapter(@NonNull final FragmentManager fm,
-                                @NonNull final OnSwipeDirection onSwipeDirection) {
+                                @NonNull final SwipeDirectionListener swipeDirectionListener) {
         super(fm);
-        this.onSwipeDirection = onSwipeDirection;
+        this.swipeDirectionListener = swipeDirectionListener;
     }
 
     @NonNull
@@ -45,26 +44,14 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
     @Override
     public Fragment getItem(final int position) {
         if (position == 1) {
-            final SuggestionFragment suggestionFragment = new SuggestionFragment();
-
-            final Bundle bundle = new Bundle();
-            bundle.putParcelable(SUGGESTION_KEY, suggestionObject);
-            suggestionFragment.setArguments(bundle);
-
-            suggestionFragment.setMoveToSearch(new MoveToSearch() {
-                @Override
-                public void onMoveToSearchFragment() {
-                    onSwipeDirection.onSwipeDirection(Direction.RIGHT);
-                }
-            });
-            return suggestionFragment;
+            return new SuggestionFragment();
         }
         final SearchingFragment searchingFragment = new SearchingFragment();
-        searchingFragment.setMoveToFilmDetails(new MoveToFilmDetails() {
+        searchingFragment.setMoveToFilmDetailsListener(new MoveToFilmDetailsListener() {
             @Override
             public void onMoveToFilmDetails(@NonNull SuggestionObject suggestionObject) {
                 SectionsPagerAdapter.this.suggestionObject = suggestionObject;
-                onSwipeDirection.onSwipeDirection(Direction.LEFT);
+                swipeDirectionListener.onSwipeDirection(Direction.LEFT);
             }
         });
         return searchingFragment;
