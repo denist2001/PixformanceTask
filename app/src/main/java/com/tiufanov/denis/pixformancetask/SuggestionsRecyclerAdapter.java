@@ -17,20 +17,24 @@ import java.util.List;
 
 public class SuggestionsRecyclerAdapter extends RecyclerView.Adapter<SuggestionsRecyclerAdapter.SuggestionViewHolder> {
     @NonNull
+    private final OnFullInfoShow onFullInfoShow;
+    @NonNull
     private final List<SuggestionObject> suggestionsList;
     @NonNull
     private final Context context;
     private final String pictureUrl;
 
     public SuggestionsRecyclerAdapter(@NonNull final Context context,
-                                      ArrayList<SuggestionObject> suggestions) {
+                                      @NonNull final ArrayList<SuggestionObject> suggestions,
+                                      @NonNull final OnFullInfoShow onFullInfoShow) {
         this.context = context;
         suggestionsList = suggestions;
         pictureUrl = getPictureUrl(context.getResources().getDisplayMetrics().density);
+        this.onFullInfoShow = onFullInfoShow;
     }
 
     @Override
-    public SuggestionViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public SuggestionViewHolder onCreateViewHolder(@NonNull final ViewGroup parent, final int viewType) {
         final SuggestionInListBinding suggestionInListBinding =
                 DataBindingUtil.inflate(LayoutInflater.from(parent.getContext()),
                 R.layout.suggestion_in_list, parent, false);
@@ -38,14 +42,14 @@ public class SuggestionsRecyclerAdapter extends RecyclerView.Adapter<Suggestions
     }
 
     @Override
-    public void onBindViewHolder(SuggestionViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final SuggestionViewHolder holder, final int position) {
+        final SuggestionObject object = suggestionsList.get(position);
         holder.element.getRoot().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO: transition to new fragment
+                onFullInfoShow.showFullInfoAboutFilm(object);
             }
         });
-        SuggestionObject object = suggestionsList.get(position);
         Glide.with(context)
                 .load(pictureUrl + object.poster_path)
                 .apply(RequestOptions.centerCropTransform())
@@ -59,7 +63,7 @@ public class SuggestionsRecyclerAdapter extends RecyclerView.Adapter<Suggestions
         return suggestionsList.size();
     }
 
-    private String getPictureUrl(final float density) {
+    public static String getPictureUrl(final float density) {
         final String pictureUrl = "https://image.tmdb.org/t/p/";
         if (density <= 1.5) {
             return pictureUrl + "w92";
@@ -80,7 +84,7 @@ public class SuggestionsRecyclerAdapter extends RecyclerView.Adapter<Suggestions
         @NonNull
         private final SuggestionInListBinding element;
 
-        public SuggestionViewHolder(@NonNull final SuggestionInListBinding element) {
+        SuggestionViewHolder(@NonNull final SuggestionInListBinding element) {
             super(element.getRoot());
             this.element = element;
         }

@@ -4,14 +4,13 @@ import android.databinding.DataBindingUtil;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 
-import android.support.v4.view.ViewPager;
 import android.os.Bundle;
-import android.view.ViewGroup;
 
 import com.tiufanov.denis.pixformancetask.databinding.ActivityMainBinding;
 import com.tiufanov.denis.pixformancetask.fragment.SectionsPagerAdapter;
+import com.tiufanov.denis.pixformancetask.fragment.SuggestionFragment;
 
-public class MainActivity extends AppCompatActivity /*implements OnFullInfoShow*/ {
+public class MainActivity extends AppCompatActivity implements OnSwipeDirection, OnFullInfoShow {
 
     private ActivityMainBinding activityMainBinder;
 
@@ -19,33 +18,30 @@ public class MainActivity extends AppCompatActivity /*implements OnFullInfoShow*
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         activityMainBinder = DataBindingUtil.setContentView(this, R.layout.activity_main);
+        activityMainBinder.container.setAdapter(new SectionsPagerAdapter(getSupportFragmentManager(), this));
 
-        SectionsPagerAdapter mSectionsPagerAdapter =
-                new SectionsPagerAdapter(getSupportFragmentManager());
-        activityMainBinder.container.setAdapter(mSectionsPagerAdapter);
+        onSwipeDirection(Direction.RIGHT);
     }
 
-    /*@Override
-    public void showFullInfoAboutFilm(@NonNull SuggestionObject filmInfo) {
-        replaceFragmentWithAnimation();
-    }
-
-    public void replaceFragmentWithAnimation(Fragment fragment, Direction swipeDirection){
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.setCustomAnimations(R.anim.enter_from_left,
-                R.anim.exit_to_right,
-                R.anim.enter_from_right,
-                R.anim.exit_to_left);
-        transaction.replace(R.id.container, fragment);
-//        transaction.addToBackStack(tag);
-        transaction.commit();
-    }
-
-    private class SwipeFragmentNeeded implements SwipeFragment {
-
-        @Override
-        public void onSwipeFragmentNeeded(Fragment fragment, Direction swipeDirection) {
-            replaceFragmentWithAnimation(fragment, swipeDirection);
+    @Override
+    public void onSwipeDirection(@NonNull Direction direction) {
+        switch (direction) {
+            case LEFT:
+                activityMainBinder.container.setCurrentItem(1, true);
+                break;
+            case RIGHT:
+                activityMainBinder.container.setCurrentItem(0, true);
+                break;
         }
-    }*/
+    }
+
+    //OnFullInfoShow region
+    @Override
+    public void showFullInfoAboutFilm(@NonNull SuggestionObject filmInfo) {
+        String tag = "android:switcher:" + activityMainBinder.container.getId() + ":" + 1;
+        SuggestionFragment fragment = (SuggestionFragment) getSupportFragmentManager().findFragmentByTag(tag);
+        fragment.setSuggestionObject(filmInfo);
+        onSwipeDirection(Direction.LEFT);
+    }
+    //OnFullInfoShow end
 }
