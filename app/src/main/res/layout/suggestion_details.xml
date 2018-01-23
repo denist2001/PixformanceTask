@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/apk/res-auto">
+
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/constraintLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/poster"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/one_material_design_point"
+            android:contentDescription="@string/poster_text"
+            tools:layout_constraintLeft_toLeftOf="parent"
+            tools:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/one_material_design_point"
+            android:textSize="25sp"
+            tools:layout_constraintLeft_toLeftOf="parent"
+            tools:layout_constraintTop_toBottomOf="@id/poster" />
+
+        <TextView
+            android:id="@+id/vote_average_description"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/one_material_design_point"
+            android:text="@string/vote_average_text"
+            android:textSize="18sp"
+            tools:layout_constraintLeft_toLeftOf="parent"
+            tools:layout_constraintTop_toBottomOf="@id/name" />
+
+        <TextView
+            android:id="@+id/vote_average"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/one_material_design_point"
+            android:textSize="18sp"
+            tools:layout_constraintLeft_toRightOf="@id/vote_average_description"
+            tools:layout_constraintTop_toBottomOf="@id/name" />
+
+        <TextView
+            android:id="@+id/vote_count_description"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/one_material_design_point"
+            android:text="@string/vote_count_text"
+            android:textSize="18sp"
+            tools:layout_constraintLeft_toLeftOf="parent"
+            tools:layout_constraintTop_toBottomOf="@id/vote_average_description" />
+
+        <TextView
+            android:id="@+id/vote_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/one_material_design_point"
+            android:textSize="18sp"
+            tools:layout_constraintLeft_toRightOf="@id/vote_count_description"
+            tools:layout_constraintTop_toBottomOf="@id/vote_average_description" />
+
+        <TextView
+            android:id="@+id/overview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/one_material_design_point"
+            android:textSize="18sp"
+            tools:layout_constraintLeft_toLeftOf="parent"
+            tools:layout_constraintTop_toBottomOf="@id/vote_count" />
+
+    </android.support.constraint.ConstraintLayout>
+    </android.support.v4.widget.NestedScrollView>
+</layout>

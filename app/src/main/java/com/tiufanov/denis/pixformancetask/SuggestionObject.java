@@ -1,11 +1,13 @@
 package com.tiufanov.denis.pixformancetask;
 
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class SuggestionObject {
+public class SuggestionObject implements Parcelable {
 
     @SerializedName("vote_count")
     @Expose
@@ -68,7 +70,7 @@ public class SuggestionObject {
                             final boolean video,
                             final float vote_average,
                             @NonNull final String title,
-                            @NonNull final float popularity,
+                            final float popularity,
                             @NonNull final String poster_path,
                             @NonNull final String original_language,
                             @NonNull final String original_title,
@@ -91,5 +93,57 @@ public class SuggestionObject {
         this.adult = adult;
         this.overview = overview;
         this.release_date = release_date;
+    }
+
+    protected SuggestionObject(Parcel in) {
+        vote_count = in.readInt();
+        id = in.readInt();
+        video = in.readByte() != 0;
+        vote_average = in.readFloat();
+        title = in.readString();
+        popularity = in.readFloat();
+        poster_path = in.readString();
+        original_language = in.readString();
+        original_title = in.readString();
+        genre_ids = in.createIntArray();
+        backdrop_path = in.readString();
+        adult = in.readByte() != 0;
+        overview = in.readString();
+        release_date = in.readString();
+    }
+
+    public static final Creator<SuggestionObject> CREATOR = new Creator<SuggestionObject>() {
+        @Override
+        public SuggestionObject createFromParcel(Parcel in) {
+            return new SuggestionObject(in);
+        }
+
+        @Override
+        public SuggestionObject[] newArray(int size) {
+            return new SuggestionObject[size];
+        }
+    };
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(vote_count);
+        dest.writeInt(id);
+        dest.writeByte((byte) (video ? 1 : 0));
+        dest.writeFloat(vote_average);
+        dest.writeString(title);
+        dest.writeFloat(popularity);
+        dest.writeString(poster_path);
+        dest.writeString(original_language);
+        dest.writeString(original_title);
+        dest.writeIntArray(genre_ids);
+        dest.writeString(backdrop_path);
+        dest.writeByte((byte) (adult ? 1 : 0));
+        dest.writeString(overview);
+        dest.writeString(release_date);
     }
 }

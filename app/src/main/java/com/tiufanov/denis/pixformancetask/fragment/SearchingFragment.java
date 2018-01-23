@@ -1,6 +1,7 @@
 package com.tiufanov.denis.pixformancetask.fragment;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.os.Handler;
@@ -18,7 +19,9 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 
 import com.tiufanov.denis.pixformancetask.FilmsRepository;
+import com.tiufanov.denis.pixformancetask.MoveToFilmDetails;
 import com.tiufanov.denis.pixformancetask.OnFilmLoaded;
+import com.tiufanov.denis.pixformancetask.OnFullInfoShow;
 import com.tiufanov.denis.pixformancetask.R;
 import com.tiufanov.denis.pixformancetask.SuggestionObject;
 import com.tiufanov.denis.pixformancetask.SuggestionsRecyclerAdapter;
@@ -27,32 +30,42 @@ import com.tiufanov.denis.pixformancetask.databinding.FragmentMainBinding;
 import java.util.ArrayList;
 
 /**
- * A placeholder fragment containing searching list and shows query results.
+ * A placeholder fragmentMainBinding containing searching list and shows query results.
  */
-public class SearchingFragment extends Fragment implements OnFilmLoaded{
+public class SearchingFragment extends Fragment implements OnFilmLoaded {
 
     private SuggestionsListAdapter suggestionsListAdapter;
-    private FragmentMainBinding fragment;
+    private FragmentMainBinding fragmentMainBinding;
     private FilmsRepository repository = new FilmsRepository();
+
+    private OnFullInfoShow onFullInfoShow;
+    private MoveToFilmDetails moveToFilmDetails;
+
+    public SearchingFragment() {
+        Log.d("SearchView", "created");
+    }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        suggestionsListAdapter = new SuggestionsListAdapter(getActivity().getApplicationContext());
-        fragment = DataBindingUtil.inflate(inflater,
+        fragmentMainBinding = DataBindingUtil.inflate(inflater,
                 R.layout.fragment_main, container, false);
-        fragment.successfulSuggestions.setAdapter(suggestionsListAdapter);
-        fragment.searchView.setOnSearchClickListener(new View.OnClickListener() {
+        if (getActivity() == null || getActivity().getApplicationContext() == null) {
+            return fragmentMainBinding.getRoot();
+        }
+        suggestionsListAdapter = new SuggestionsListAdapter(getActivity().getApplicationContext());
+        fragmentMainBinding.successfulSuggestions.setAdapter(suggestionsListAdapter);
+        fragmentMainBinding.searchView.setOnSearchClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                fragment.successfulSuggestions.bringToFront();
-                fragment.successfulSuggestions.setVisibility(View.VISIBLE);
+                fragmentMainBinding.successfulSuggestions.bringToFront();
+                fragmentMainBinding.successfulSuggestions.setVisibility(View.VISIBLE);
             }
         });
-        fragment.searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+        fragmentMainBinding.searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                fragment.successfulSuggestions.setVisibility(View.INVISIBLE);
+                fragmentMainBinding.successfulSuggestions.setVisibility(View.INVISIBLE);
                 searchFilm(query);
                 return false;
             }
@@ -62,15 +75,25 @@ public class SearchingFragment extends Fragment implements OnFilmLoaded{
                 return false;
             }
         });
-        fragment.successfulSuggestions.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        fragmentMainBinding.successfulSuggestions.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                fragment.successfulSuggestions.setVisibility(View.INVISIBLE);
-                fragment.searchView.setQuery(suggestionsListAdapter.getItem(position), true);
+                fragmentMainBinding.successfulSuggestions.setVisibility(View.INVISIBLE);
+                fragmentMainBinding.searchView.setQuery(suggestionsListAdapter.getItem(position), true);
             }
         });
 
-        return fragment.getRoot();
+        return fragmentMainBinding.getRoot();
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        try {
+            onFullInfoShow = (OnFullInfoShow) getActivity();
+        } catch (ClassCastException e) {
+            throw new ClassCastException("Error in retrieving data. Please try again");
+        }
     }
 
     @Override
@@ -88,14 +111,19 @@ public class SearchingFragment extends Fragment implements OnFilmLoaded{
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        if (fragment != null) {
-            ViewGroup parent = (ViewGroup) fragment.getRoot().getParent();
+        /*if (fragmentMainBinding != null) {
+            ViewGroup parent = (ViewGroup) fragmentMainBinding.getRoot().getParent();
             if (parent != null) {
                 parent.removeAllViews();
             }
-        }
+        }*/
     }
 
+    private void searchFilm(@NonNull final String filmName) {
+        repository.requestFilm(filmName, this);
+    }
+
+    //OnFilmLoaded region
     @Override
     public void onSearchResultsLoaded(@NonNull final String filmName,
                                       @NonNull final ArrayList<SuggestionObject> suggestions) {
@@ -105,21 +133,21 @@ public class SearchingFragment extends Fragment implements OnFilmLoaded{
             public void run() {
                 if (suggestions.isEmpty()) {
                     AlertDialog.Builder alertDialog =
-                            new AlertDialog.Builder(fragment.getRoot().getContext());
+                            new AlertDialog.Builder(fragmentMainBinding.getRoot().getContext());
                     alertDialog.setMessage("Ooops... Nothing were found. Try to find more common films.");
                     alertDialog.create().show();
                     return;
                 }
                 suggestionsListAdapter.moveSuggestionToTopPosition(filmName);
                 suggestionsListAdapter.notifyDataSetChanged();
-                fragment.suggestionsRecyclerView.setVisibility(View.VISIBLE);
+                fragmentMainBinding.suggestionsRecyclerView.setVisibility(View.VISIBLE);
                 DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(
-                        fragment.suggestionsRecyclerView.getContext(),DividerItemDecoration.VERTICAL);
-                fragment.suggestionsRecyclerView.addItemDecoration(dividerItemDecoration);
-                fragment.suggestionsRecyclerView.setLayoutManager(
-                        new LinearLayoutManager(fragment.getRoot().getContext()));
-                fragment.suggestionsRecyclerView.setAdapter(
-                        new SuggestionsRecyclerAdapter(fragment.getRoot().getContext(), suggestions));
+                        fragmentMainBinding.suggestionsRecyclerView.getContext(), DividerItemDecoration.VERTICAL);
+                fragmentMainBinding.suggestionsRecyclerView.addItemDecoration(dividerItemDecoration);
+                fragmentMainBinding.suggestionsRecyclerView.setLayoutManager(
+                        new LinearLayoutManager(fragmentMainBinding.getRoot().getContext()));
+                fragmentMainBinding.suggestionsRecyclerView.setAdapter(
+                        new SuggestionsRecyclerAdapter(fragmentMainBinding.getRoot().getContext(), suggestions, onFullInfoShow));
             }
         });
 
@@ -130,8 +158,8 @@ public class SearchingFragment extends Fragment implements OnFilmLoaded{
         Log.d("Fail answer", error);
     }
 
-    private void searchFilm (@NonNull final String filmName) {
-        repository.requestFilm(filmName, this);
+    public void setMoveToFilmDetails(MoveToFilmDetails moveToFilmDetails) {
+        this.moveToFilmDetails = moveToFilmDetails;
     }
-
+    //OnFilmLoaded end
 }
