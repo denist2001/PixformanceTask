@@ -17,7 +17,7 @@ import java.util.List;
 
 public class SuggestionsRecyclerAdapter extends RecyclerView.Adapter<SuggestionsRecyclerAdapter.SuggestionViewHolder> {
     @NonNull
-    private final OnFullInfoShow onFullInfoShow;
+    private final FullInfoShowListener fullInfoShowListener;
     @NonNull
     private final List<SuggestionObject> suggestionsList;
     @NonNull
@@ -26,18 +26,18 @@ public class SuggestionsRecyclerAdapter extends RecyclerView.Adapter<Suggestions
 
     public SuggestionsRecyclerAdapter(@NonNull final Context context,
                                       @NonNull final ArrayList<SuggestionObject> suggestions,
-                                      @NonNull final OnFullInfoShow onFullInfoShow) {
+                                      @NonNull final FullInfoShowListener fullInfoShowListener) {
         this.context = context;
         suggestionsList = suggestions;
         pictureUrl = getPictureUrl(context.getResources().getDisplayMetrics().density);
-        this.onFullInfoShow = onFullInfoShow;
+        this.fullInfoShowListener = fullInfoShowListener;
     }
 
     @Override
     public SuggestionViewHolder onCreateViewHolder(@NonNull final ViewGroup parent, final int viewType) {
         final SuggestionInListBinding suggestionInListBinding =
                 DataBindingUtil.inflate(LayoutInflater.from(parent.getContext()),
-                R.layout.suggestion_in_list, parent, false);
+                        R.layout.suggestion_in_list, parent, false);
         return new SuggestionViewHolder(suggestionInListBinding);
     }
 
@@ -47,15 +47,15 @@ public class SuggestionsRecyclerAdapter extends RecyclerView.Adapter<Suggestions
         holder.element.getRoot().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onFullInfoShow.showFullInfoAboutFilm(object);
+                fullInfoShowListener.showFullInfoAboutFilm(object);
             }
         });
         Glide.with(context)
-                .load(pictureUrl + object.poster_path)
+                .load(pictureUrl + object.posterPath)
                 .apply(RequestOptions.centerCropTransform())
                 .into(holder.element.poster);
         holder.element.name.setText(object.title);
-        holder.element.voteAverage.setText(String.valueOf(object.vote_average));
+        holder.element.voteAverage.setText(String.valueOf(object.voteAverage));
     }
 
     @Override

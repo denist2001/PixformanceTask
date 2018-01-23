@@ -18,10 +18,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 
+import com.tiufanov.denis.pixformancetask.FilmLoadListener;
 import com.tiufanov.denis.pixformancetask.FilmsRepository;
-import com.tiufanov.denis.pixformancetask.MoveToFilmDetails;
-import com.tiufanov.denis.pixformancetask.OnFilmLoaded;
-import com.tiufanov.denis.pixformancetask.OnFullInfoShow;
+import com.tiufanov.denis.pixformancetask.MoveToFilmDetailsListener;
+import com.tiufanov.denis.pixformancetask.FullInfoShowListener;
 import com.tiufanov.denis.pixformancetask.R;
 import com.tiufanov.denis.pixformancetask.SuggestionObject;
 import com.tiufanov.denis.pixformancetask.SuggestionsRecyclerAdapter;
@@ -32,14 +32,14 @@ import java.util.ArrayList;
 /**
  * A placeholder fragmentMainBinding containing searching list and shows query results.
  */
-public class SearchingFragment extends Fragment implements OnFilmLoaded {
+public class SearchingFragment extends Fragment implements FilmLoadListener {
 
     private SuggestionsListAdapter suggestionsListAdapter;
     private FragmentMainBinding fragmentMainBinding;
     private FilmsRepository repository = new FilmsRepository();
 
-    private OnFullInfoShow onFullInfoShow;
-    private MoveToFilmDetails moveToFilmDetails;
+    private FullInfoShowListener fullInfoShowListener;
+    private MoveToFilmDetailsListener moveToFilmDetailsListener;
 
     public SearchingFragment() {
         Log.d("SearchView", "created");
@@ -90,7 +90,7 @@ public class SearchingFragment extends Fragment implements OnFilmLoaded {
     public void onAttach(Context context) {
         super.onAttach(context);
         try {
-            onFullInfoShow = (OnFullInfoShow) getActivity();
+            fullInfoShowListener = (FullInfoShowListener) getActivity();
         } catch (ClassCastException e) {
             throw new ClassCastException("Error in retrieving data. Please try again");
         }
@@ -111,19 +111,13 @@ public class SearchingFragment extends Fragment implements OnFilmLoaded {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        /*if (fragmentMainBinding != null) {
-            ViewGroup parent = (ViewGroup) fragmentMainBinding.getRoot().getParent();
-            if (parent != null) {
-                parent.removeAllViews();
-            }
-        }*/
     }
 
     private void searchFilm(@NonNull final String filmName) {
         repository.requestFilm(filmName, this);
     }
 
-    //OnFilmLoaded region
+    //FilmLoadListener region
     @Override
     public void onSearchResultsLoaded(@NonNull final String filmName,
                                       @NonNull final ArrayList<SuggestionObject> suggestions) {
@@ -147,7 +141,7 @@ public class SearchingFragment extends Fragment implements OnFilmLoaded {
                 fragmentMainBinding.suggestionsRecyclerView.setLayoutManager(
                         new LinearLayoutManager(fragmentMainBinding.getRoot().getContext()));
                 fragmentMainBinding.suggestionsRecyclerView.setAdapter(
-                        new SuggestionsRecyclerAdapter(fragmentMainBinding.getRoot().getContext(), suggestions, onFullInfoShow));
+                        new SuggestionsRecyclerAdapter(fragmentMainBinding.getRoot().getContext(), suggestions, fullInfoShowListener));
             }
         });
 
@@ -158,8 +152,8 @@ public class SearchingFragment extends Fragment implements OnFilmLoaded {
         Log.d("Fail answer", error);
     }
 
-    public void setMoveToFilmDetails(MoveToFilmDetails moveToFilmDetails) {
-        this.moveToFilmDetails = moveToFilmDetails;
+    public void setMoveToFilmDetailsListener(MoveToFilmDetailsListener moveToFilmDetailsListener) {
+        this.moveToFilmDetailsListener = moveToFilmDetailsListener;
     }
-    //OnFilmLoaded end
+    //FilmLoadListener end
 }

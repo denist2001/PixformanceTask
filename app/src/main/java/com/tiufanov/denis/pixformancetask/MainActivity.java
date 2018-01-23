@@ -10,7 +10,7 @@ import com.tiufanov.denis.pixformancetask.databinding.ActivityMainBinding;
 import com.tiufanov.denis.pixformancetask.fragment.SectionsPagerAdapter;
 import com.tiufanov.denis.pixformancetask.fragment.SuggestionFragment;
 
-public class MainActivity extends AppCompatActivity implements OnSwipeDirection, OnFullInfoShow {
+public class MainActivity extends AppCompatActivity implements SwipeDirectionListener, FullInfoShowListener {
 
     private ActivityMainBinding activityMainBinder;
 
@@ -35,7 +35,7 @@ public class MainActivity extends AppCompatActivity implements OnSwipeDirection,
         }
     }
 
-    //OnFullInfoShow region
+    //FullInfoShowListener region
     @Override
     public void showFullInfoAboutFilm(@NonNull SuggestionObject filmInfo) {
         String tag = "android:switcher:" + activityMainBinder.container.getId() + ":" + 1;
@@ -43,5 +43,5 @@ public class MainActivity extends AppCompatActivity implements OnSwipeDirection,
         fragment.setSuggestionObject(filmInfo);
         onSwipeDirection(Direction.LEFT);
     }
-    //OnFullInfoShow end
+    //FullInfoShowListener end
 }

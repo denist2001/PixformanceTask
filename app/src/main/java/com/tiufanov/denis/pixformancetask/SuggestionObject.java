@@ -11,7 +11,7 @@ public class SuggestionObject implements Parcelable {
 
     @SerializedName("vote_count")
     @Expose
-    public final int vote_count;
+    public final int voteCount;
 
     @SerializedName("id")
     @Expose
@@ -23,7 +23,7 @@ public class SuggestionObject implements Parcelable {
 
     @SerializedName("vote_average")
     @Expose
-    public final float vote_average;
+    public final float voteAverage;
 
     @SerializedName("title")
     @Expose
@@ -35,23 +35,23 @@ public class SuggestionObject implements Parcelable {
 
     @SerializedName("poster_path")
     @Expose
-    public final String poster_path;
+    public final String posterPath;
 
     @SerializedName("original_language")
     @Expose
-    public final String original_language;
+    public final String originalLanguage;
 
     @SerializedName("original_title")
     @Expose
-    public final String original_title;
+    public final String originalTitle;
 
     @SerializedName("genre_ids")
     @Expose
-    public final int[] genre_ids;
+    public final int[] genreIds;
 
     @SerializedName("backdrop_path")
     @Expose
-    public final String backdrop_path;
+    public final String backdropPath;
 
     @SerializedName("adult")
     @Expose
@@ -63,53 +63,53 @@ public class SuggestionObject implements Parcelable {
 
     @SerializedName("release_date")
     @Expose
-    public final String release_date;
+    public final String releaseDate;
 
-    public SuggestionObject(final int vote_count,
+    public SuggestionObject(final int voteCount,
                             final int id,
                             final boolean video,
-                            final float vote_average,
+                            final float voteAverage,
                             @NonNull final String title,
                             final float popularity,
-                            @NonNull final String poster_path,
-                            @NonNull final String original_language,
-                            @NonNull final String original_title,
-                            final int[] genre_ids,
-                            @NonNull final String backdrop_path,
+                            @NonNull final String posterPath,
+                            @NonNull final String originalLanguage,
+                            @NonNull final String originalTitle,
+                            final int[] genreIds,
+                            @NonNull final String backdropPath,
                             final boolean adult,
                             @NonNull final String overview,
-                            @NonNull final String release_date) {
-        this.vote_count = vote_count;
+                            @NonNull final String releaseDate) {
+        this.voteCount = voteCount;
         this.id = id;
         this.video = video;
-        this.vote_average = vote_average;
+        this.voteAverage = voteAverage;
         this.title = title;
         this.popularity = popularity;
-        this.poster_path = poster_path;
-        this.original_language = original_language;
-        this.original_title = original_title;
-        this.genre_ids = genre_ids;
-        this.backdrop_path = backdrop_path;
+        this.posterPath = posterPath;
+        this.originalLanguage = originalLanguage;
+        this.originalTitle = originalTitle;
+        this.genreIds = genreIds;
+        this.backdropPath = backdropPath;
         this.adult = adult;
         this.overview = overview;
-        this.release_date = release_date;
+        this.releaseDate = releaseDate;
     }
 
     protected SuggestionObject(Parcel in) {
-        vote_count = in.readInt();
+        voteCount = in.readInt();
         id = in.readInt();
         video = in.readByte() != 0;
-        vote_average = in.readFloat();
+        voteAverage = in.readFloat();
         title = in.readString();
         popularity = in.readFloat();
-        poster_path = in.readString();
-        original_language = in.readString();
-        original_title = in.readString();
-        genre_ids = in.createIntArray();
-        backdrop_path = in.readString();
+        posterPath = in.readString();
+        originalLanguage = in.readString();
+        originalTitle = in.readString();
+        genreIds = in.createIntArray();
+        backdropPath = in.readString();
         adult = in.readByte() != 0;
         overview = in.readString();
-        release_date = in.readString();
+        releaseDate = in.readString();
     }
 
     public static final Creator<SuggestionObject> CREATOR = new Creator<SuggestionObject>() {
@@ -131,19 +131,19 @@ public class SuggestionObject implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(vote_count);
+        dest.writeInt(voteCount);
         dest.writeInt(id);
         dest.writeByte((byte) (video ? 1 : 0));
-        dest.writeFloat(vote_average);
+        dest.writeFloat(voteAverage);
         dest.writeString(title);
         dest.writeFloat(popularity);
-        dest.writeString(poster_path);
-        dest.writeString(original_language);
-        dest.writeString(original_title);
-        dest.writeIntArray(genre_ids);
-        dest.writeString(backdrop_path);
+        dest.writeString(posterPath);
+        dest.writeString(originalLanguage);
+        dest.writeString(originalTitle);
+        dest.writeIntArray(genreIds);
+        dest.writeString(backdropPath);
         dest.writeByte((byte) (adult ? 1 : 0));
         dest.writeString(overview);
-        dest.writeString(release_date);
+        dest.writeString(releaseDate);
     }
 }
