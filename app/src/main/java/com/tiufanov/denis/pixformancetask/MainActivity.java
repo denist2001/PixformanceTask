@@ -18,7 +18,7 @@ public class MainActivity extends AppCompatActivity implements SwipeDirectionLis
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         activityMainBinder = DataBindingUtil.setContentView(this, R.layout.activity_main);
-        activityMainBinder.container.setAdapter(new SectionsPagerAdapter(getSupportFragmentManager(), this));
+        activityMainBinder.container.setAdapter(new SectionsPagerAdapter(getSupportFragmentManager()));
 
         onSwipeDirection(Direction.RIGHT);
     }
@@ -44,4 +44,14 @@ public class MainActivity extends AppCompatActivity implements SwipeDirectionLis
         onSwipeDirection(Direction.LEFT);
     }
     //FullInfoShowListener end
+
+
+    @Override
+    public void onBackPressed() {
+        if (activityMainBinder.container.getCurrentItem() != 0) {
+            onSwipeDirection(Direction.RIGHT);
+            return;
+        }
+        super.onBackPressed();
+    }
 }
