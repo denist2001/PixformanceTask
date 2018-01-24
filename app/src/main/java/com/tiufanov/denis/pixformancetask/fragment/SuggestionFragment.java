@@ -45,6 +45,8 @@ public class SuggestionFragment extends Fragment {
                     .apply(RequestOptions.centerCropTransform())
                     .into(suggestionDetailsBinding.poster);
         }
+        suggestionDetailsBinding.voteAverageDescription.setVisibility(View.VISIBLE);
+        suggestionDetailsBinding.voteCountDescription.setVisibility(View.VISIBLE);
         suggestionDetailsBinding.name.setText(object.title);
         suggestionDetailsBinding.voteAverage.setText(String.valueOf(object.voteAverage));
         suggestionDetailsBinding.voteCount.setText(String.valueOf(object.voteCount));
