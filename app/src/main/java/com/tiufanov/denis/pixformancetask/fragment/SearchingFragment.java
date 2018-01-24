@@ -20,7 +20,6 @@ import android.widget.AdapterView;
 
 import com.tiufanov.denis.pixformancetask.FilmLoadListener;
 import com.tiufanov.denis.pixformancetask.FilmsRepository;
-import com.tiufanov.denis.pixformancetask.MoveToFilmDetailsListener;
 import com.tiufanov.denis.pixformancetask.FullInfoShowListener;
 import com.tiufanov.denis.pixformancetask.R;
 import com.tiufanov.denis.pixformancetask.SuggestionObject;
@@ -37,9 +36,7 @@ public class SearchingFragment extends Fragment implements FilmLoadListener {
     private SuggestionsListAdapter suggestionsListAdapter;
     private FragmentMainBinding fragmentMainBinding;
     private FilmsRepository repository = new FilmsRepository();
-
     private FullInfoShowListener fullInfoShowListener;
-    private MoveToFilmDetailsListener moveToFilmDetailsListener;
 
     public SearchingFragment() {
         Log.d("SearchView", "created");
@@ -150,10 +147,6 @@ public class SearchingFragment extends Fragment implements FilmLoadListener {
     @Override
     public void onSearchResultsError(@NonNull final String filmName, @NonNull final String error) {
         Log.d("Fail answer", error);
-    }
-
-    public void setMoveToFilmDetailsListener(MoveToFilmDetailsListener moveToFilmDetailsListener) {
-        this.moveToFilmDetailsListener = moveToFilmDetailsListener;
     }
     //FilmLoadListener end
 }

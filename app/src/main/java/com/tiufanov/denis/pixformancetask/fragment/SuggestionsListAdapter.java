@@ -3,11 +3,13 @@ package com.tiufanov.denis.pixformancetask.fragment;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
+import android.support.annotation.VisibleForTesting;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.Set;
 
@@ -18,6 +20,7 @@ public class SuggestionsListAdapter extends BaseAdapter {
     private static String SUGGESTIONS_KEY = "suggestions";
     @NonNull
     private final Context context;
+    @VisibleForTesting
     @NonNull
     private final LimitedList suggestionsList= new LimitedList();
 
@@ -58,13 +61,16 @@ public class SuggestionsListAdapter extends BaseAdapter {
     void onResume() {
         SharedPreferences preferences = context.getSharedPreferences(SHAREDPREFS_KEY, Context.MODE_PRIVATE);
         Set<String> suggestionsSet = preferences.getStringSet(SUGGESTIONS_KEY,
-                new android.support.v4.util.ArraySet<String>());
+                new LinkedHashSet<String>(10));
+        if (!suggestionsList.isEmpty()) {
+            suggestionsList.clear();
+        }
         suggestionsList.addAll(suggestionsSet);
     }
 
     void onPause() {
         SharedPreferences preferences = context.getSharedPreferences(SHAREDPREFS_KEY, Context.MODE_PRIVATE);
-        Set<String> suggestionsSet = new android.support.v4.util.ArraySet<>();
+        Set<String> suggestionsSet = new LinkedHashSet<>(10);
         suggestionsSet.addAll(suggestionsList);
         preferences.edit().putStringSet(SUGGESTIONS_KEY, suggestionsSet).apply();
     }
