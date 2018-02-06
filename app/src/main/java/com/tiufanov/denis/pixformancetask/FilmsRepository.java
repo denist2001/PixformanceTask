@@ -12,12 +12,13 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class FilmsRepository{
     @NonNull
     private static final ArrayList<SuggestionObject> suggestions = new ArrayList<>();
-    private static final String API_REQUEST = "https://api.themoviedb.org/";
+    public static String API_REQUEST = "https://api.themoviedb.org/";
     private static final String API_KEY= "2696829a81b1b5827d515ff121700838";
 
-    public void requestFilm(@NonNull final String filmName, @NonNull final FilmLoadListener filmLoadListener) {
+    public void requestFilm(@NonNull final String filmName, @NonNull final FilmLoadListener filmLoadListener,
+                            @NonNull final  String apiRequest) {
         final Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(API_REQUEST)
+                .baseUrl(apiRequest)
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(new OkHttpClient.Builder().build())
                 .build();
@@ -26,9 +27,19 @@ public class FilmsRepository{
         call.enqueue(new retrofit2.Callback<ApiObject>() {
             @Override
             public void onResponse(retrofit2.Call<ApiObject> call, retrofit2.Response<ApiObject> response) {
-                suggestions.clear();
-                suggestions.addAll(Arrays.asList(response.body().results));
-                filmLoadListener.onSearchResultsLoaded(filmName, suggestions);
+                if (response.body().errorObject == null ) {
+                    if (response.body().results !=null) {
+                        suggestions.clear();
+                        suggestions.addAll(Arrays.asList(response.body().results));
+                        filmLoadListener.onSearchResultsLoaded(filmName, suggestions);
+                        return;
+                    }
+                    if (!response.body().success) {
+                        filmLoadListener.onSearchResultsError(filmName, response.body().status_message);
+                        return;
+                    }
+                }
+                filmLoadListener.onSearchResultsError(filmName, response.body().errorObject.message);
             }
 
             @Override

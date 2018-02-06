@@ -2,7 +2,6 @@ package com.tiufanov.denis.pixformancetask.fragment;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.support.annotation.NonNull;
 
 import org.junit.After;
 import org.junit.Before;
@@ -12,10 +11,7 @@ import org.mockito.ArgumentMatchers;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.LinkedHashSet;
-import java.util.LinkedList;
 import java.util.Set;
 
 import static org.junit.Assert.assertTrue;
@@ -35,22 +31,22 @@ public class SuggestionsListAdapterTest {
     @Mock
     private SharedPreferences.Editor preferencsEditor;
 
-    private final Set suggestionsSet = new LinkedHashSet(10);
+    private final Set<String> suggestionsSet = new LinkedHashSet<>(10);
 
     private SuggestionsListAdapter target;
 
     @Before
     public void setUp() throws Exception {
-        suggestionsSet.add("transporter");
-        suggestionsSet.add("omen");
-        suggestionsSet.add("zombie");
-        suggestionsSet.add("batman");
-        suggestionsSet.add("freinds");
-        suggestionsSet.add("new day");
-        suggestionsSet.add("superman");
-        suggestionsSet.add("amelie");
-        suggestionsSet.add("monsters");
-        suggestionsSet.add("konstantine");
+        assertTrue(suggestionsSet.add("transporter"));
+        assertTrue(suggestionsSet.add("omen"));
+        assertTrue(suggestionsSet.add("zombie"));
+        assertTrue(suggestionsSet.add("batman"));
+        assertTrue(suggestionsSet.add("freinds"));
+        assertTrue(suggestionsSet.add("new day"));
+        assertTrue(suggestionsSet.add("superman"));
+        assertTrue(suggestionsSet.add("amelie"));
+        assertTrue(suggestionsSet.add("monsters"));
+        assertTrue(suggestionsSet.add("konstantine"));
         when(context.getSharedPreferences(SHAREDPREFS_KEY, Context.MODE_PRIVATE)).thenReturn(sharedPreferences);
         when(sharedPreferences.getStringSet(eq(SUGGESTIONS_KEY), ArgumentMatchers.<String>anySet())).thenReturn(suggestionsSet);
         when(sharedPreferences.edit()).thenReturn(preferencsEditor);
@@ -69,10 +65,6 @@ public class SuggestionsListAdapterTest {
         target.moveSuggestionToTopPosition("konstantine");
     }
 
-    @After
-    public void tearDown() throws Exception {
-    }
-
     @Test
     public void moveNewSuggestionToTopPosition() throws Exception {
         assertTrue(target.getCount() == 10);
@@ -85,7 +77,6 @@ public class SuggestionsListAdapterTest {
         assertTrue(target.getItem(0).equals("advocate"));
         assertTrue(target.getItem(9).equals("omen"));
     }
-
 
     @Test
     public void moveExistedSuggestionToTopPosition() throws Exception {

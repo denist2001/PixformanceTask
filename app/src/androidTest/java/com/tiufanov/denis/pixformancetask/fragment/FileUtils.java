@@ -1,4 +1,7 @@
-package com.tiufanov.denis.pixformancetask;
+package com.tiufanov.denis.pixformancetask.fragment;
+
+import android.content.Context;
+import android.support.annotation.NonNull;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -7,10 +10,10 @@ import java.io.InputStreamReader;
 
 public class FileUtils {
 
-    public static String readFromResources(final String fileName) {
+    public static String readFromResources(@NonNull final Context context, final String fileName) {
         BufferedReader reader = null;
         try {
-            final InputStream resourceAsStream = FileUtils.class.getResourceAsStream(fileName);
+            final InputStream resourceAsStream = context.getClassLoader().getResourceAsStream(fileName);
             if (resourceAsStream == null) {
                 throw new IllegalStateException("Resource not found! " + fileName);
             }
