@@ -47,7 +47,7 @@ public class SuggestionsRecyclerAdapter extends RecyclerView.Adapter<Suggestions
         holder.element.getRoot().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                fullInfoShowListener.showFullInfoAboutFilm(object);
+                fullInfoShowListener.showFullInfoAboutFilm(object, null);
             }
         });
         Glide.with(context)

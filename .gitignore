@@ -1,4 +1,6 @@
 *.iml
+*.gradle
+gradle*
 .gradle
 /app/build
 /local.properties

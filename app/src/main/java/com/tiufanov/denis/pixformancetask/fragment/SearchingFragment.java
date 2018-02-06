@@ -8,6 +8,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.VisibleForTesting;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -37,6 +38,7 @@ public class SearchingFragment extends Fragment implements FilmLoadListener {
     private FragmentMainBinding fragmentMainBinding;
     private FilmsRepository repository = new FilmsRepository();
     private FullInfoShowListener fullInfoShowListener;
+    private AlertDialog.Builder alertDialog;
 
     public SearchingFragment() {
         Log.d("SearchView", "created");
@@ -110,8 +112,9 @@ public class SearchingFragment extends Fragment implements FilmLoadListener {
         super.onDestroyView();
     }
 
-    private void searchFilm(@NonNull final String filmName) {
-        repository.requestFilm(filmName, this);
+    @VisibleForTesting
+    void searchFilm(@NonNull final String filmName) {
+        repository.requestFilm(filmName, this, FilmsRepository.API_REQUEST);
     }
 
     //FilmLoadListener region
@@ -123,7 +126,7 @@ public class SearchingFragment extends Fragment implements FilmLoadListener {
             @Override
             public void run() {
                 if (suggestions.isEmpty()) {
-                    AlertDialog.Builder alertDialog =
+                    alertDialog =
                             new AlertDialog.Builder(fragmentMainBinding.getRoot().getContext());
                     alertDialog.setMessage("Ooops... Nothing were found. Try to find more common films.");
                     alertDialog.create().show();
@@ -146,7 +149,13 @@ public class SearchingFragment extends Fragment implements FilmLoadListener {
 
     @Override
     public void onSearchResultsError(@NonNull final String filmName, @NonNull final String error) {
-        Log.d("Fail answer", error);
+        if (!error.isEmpty()) {
+            alertDialog =
+                    new AlertDialog.Builder(fragmentMainBinding.getRoot().getContext());
+            alertDialog.setMessage(error);
+            alertDialog.create().show();
+            return;
+        }
     }
     //FilmLoadListener end
 }
