@@ -154,7 +154,6 @@ public class SearchingFragment extends Fragment implements FilmLoadListener {
                     new AlertDialog.Builder(fragmentMainBinding.getRoot().getContext());
             alertDialog.setMessage(error);
             alertDialog.create().show();
-            return;
         }
     }
     //FilmLoadListener end
